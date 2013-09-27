@@ -1,0 +1,68 @@
+html, body {
+	background: #000;
+	color: #fff;
+	font-size: 20px;
+}
+
+section.game {
+	margin: 20px;
+	border: 20px solid white;
+	padding: 20px;
+	height: 400px;
+	text-align: center;
+	position: relative;
+	top: 0; left: 0;
+}
+
+section.score {
+	width: 30%;
+	margin: 0 auto;
+
+	.left {
+		float: left;
+	}
+
+	.right {
+		float: right;
+	}
+
+	.player {
+		font-weight: bold;
+
+		span {
+			display: block;
+		}
+
+		span.score {
+			font-size: 2em;
+		}
+	}
+}
+
+section.game {
+	.bat {
+		position: absolute;
+		margin-top: -50px;
+		top: 50%;
+		height: 100px;
+		width: 20px;
+		background: #0ff;
+	}
+	.bat-left {
+		left: 20px;
+	}
+	.bat-right {
+		right: 20px;
+	}
+	.ball {
+		width: 20px;
+		height: 20px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-top: -10px;
+		margin-left: -10px;
+		//border-radius: 20px;
+		background: #fff;
+	}
+}
