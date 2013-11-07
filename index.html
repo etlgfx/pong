@@ -4,29 +4,14 @@
 		<link type="text/css" rel="stylesheet" href="style.css" />
 	</head>
 	<body>
-		<section class="game">
-			<section class="score">
-				<h1>Score</h1>
-				<div class="player left">
-					<span class="username">etlgfx</span>
-					<span class="score">0</span>
-				</div>
-				<div class="player right">
-					<span class="username">etlgfx</span>
-					<span class="score">0</span>
-				</div>
-			</section>
-
-			<div class="bat bat-left">
-			</div>
-
-			<div class="bat bat-right">
-			</div>
-
-			<div class="ball">
-			</div>
-		</section>
-		<script type="text/javascript" src="game.js">
+        <canvas id="pong" width="800" height="450">
+        </canvas>
+		<script type="text/javascript" src="pong.js">
 		</script>
+        <script type="text/javascript">
+window.addEventListener('load', function () {
+    pong.init('pong');
+});
+        </script>
 	</body>
 </html>
