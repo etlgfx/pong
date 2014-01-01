@@ -51,14 +51,21 @@
 			this.animate.call(this, ts);
 		}
 
+		this.coords.x += ts * this.velocity.x;
 		this.coords.y += ts * this.velocity.y;
 
-		//detect collisions
+		//detect collisions TODO with what? this requires coupling to other things
 	};
 
 	Obj.prototype.accelerateTo = function (force, speed) {
 		this.animate = function (ts) {
-			if (this.velocity.y < speed) {
+			if (speed > 0 && this.velocity.y < speed) {
+				this.velocity.y += ts * force * this.mass;
+			}
+			else if (speed < 0 && this.velocity.y > speed) {
+				this.velocity.y -= ts * force * this.mass;
+			}
+			else if (speed == 0 && this.velocity.y != 0) {
 				this.velocity.y += ts * force * this.mass;
 			}
 			else {
@@ -100,17 +107,56 @@
 		ctx.rect(this.coords.x - this.bounds.w / 2, this.coords.y - this.bounds.h / 2, this.bounds.w, this.bounds.h);
 		ctx.fillStyle = 'rgb(0, 255, 0)';
 		ctx.fill();
-	}
+	};
 
     function Ball(o) {
-    }
+		o.bounds = {w: o.size, h: o.size};
+		Obj.call(this, o);
+		this.size = o.size;
+		this.radius = o.size / 2;
+	}
+
     Ball.prototype = Object.create(Obj.prototype);
+
+	Ball.prototype.draw = function (ctx) {
+		ctx.beginPath();
+		ctx.arc(this.coords.x, this.coords.y, this.radius, 0, Math.PI * 2, true);
+		ctx.fillStyle = 'rgb(0, 255, 0)';
+		ctx.fill();
+	};
+
+	Ball.prototype.physics = function (ts, box, paddles) {
+		box = [this.radius, box[0] - this.radius, box[1] - this.radius, this.radius]; //t r b l
+
+		this.coords.x += ts * this.velocity.x;
+		this.coords.y += ts * this.velocity.y;
+
+		if (this.coords.x < box[3]) { //left
+			this.coords.x = box[3] - (this.coords.x - box[3]);
+			this.velocity.x = -this.velocity.x;
+		}
+		else if (this.coords.x > box[1]) { //right
+			this.coords.x = box[1] - (this.coords.x - box[1]);
+			this.velocity.x = -this.velocity.x;
+		}
+
+		if (this.coords.y < box[0]) { //top
+			this.coords.y = box[0] - (this.coords.y - box[0]);
+			this.velocity.y = -this.velocity.y;
+		}
+		else if (this.coords.y > box[2]) { //bottom
+			this.coords.y = box[2] - (this.coords.y - box[2]);
+			this.velocity.y = -this.velocity.y;
+		}
+
+		//collisions
+	};
 
     function Player(paddle) {
 		this.paddle = paddle;
-		this.maxSpeed = 200;
-		this.acceleration = 300;
-		this.brake = 500;
+		this.maxSpeed = 300;
+		this.acceleration = 600;
+		this.brake = 600;
     }
 
 	Player.prototype.controlStart = function (action) {
@@ -154,13 +200,16 @@
     BoundsCircle.prototype = Object.create(Bounds.prototype);
 	*/
 
-	function Pong(dom) { 
+	function Pong(dom) {
 		this.canvas = dom;
 		this.ctx = dom.getContext('2d');
 		this.width = this.ctx.canvas.width;
 		this.height = this.ctx.canvas.height;
-		this.lastDraw = null;
+		this.lastDraw = Date.now();
 
+		//TODO instead of this we could use a gamestate / scene graph thingy and
+		//call draw on that, and refresh the entire state every time a point is
+		//scored and whatnot
 		this.paddles = [
 			new Paddle({coords: [20, this.height / 2], velocity: [0, 0], bounds: {w: 20, h: 100}}),
 			new Paddle({coords: [this.width - 20, this.height / 2], velocity: [0, 0], bounds: {w: 20, h: 100}}),
@@ -170,25 +219,37 @@
 			new Player(this.paddles[0]),
 			new Player(this.paddles[1])
 		];
+
+		this.ball = new Ball({coords: [this.width / 2, this.height / 2], velocity: [250, 250], size: 20});
 	}
 
     Pong.prototype.draw = function () {
 		var ts_cur = Date.now();
-		var ts = ts_cur - this.lastDraw;
+		var ts = (ts_cur - this.lastDraw) / 1000;
 		this.lastDraw = ts_cur;
 
 		this.ctx.clearRect(0, 0, this.width, this.height);
 
 		this.paddles.forEach(function (p) {
-			p.physics(ts / 1000);
+			p.physics(ts);
 			p.draw(this.ctx)
 		}, this);
 
-		window.requestAnimationFrame(this.draw.bind(this));
+		this.ball.physics(ts, [this.width, this.height], this.paddles);
+		this.ball.draw(this.ctx);
+
+		this.animationFrame = window.requestAnimationFrame(this.draw.bind(this));
     };
 
+	/**
+	 * TODO make this listen for errors / exceptions
+	 */
+	Pong.prototype.die = function () {
+		window.cancelAnimationFrame(this.animationFrame);
+	};
+
 	Pong.prototype.controls = function (type, action) {
-		var player = this.players[0+!!(action & 0x08)]; //so dirty
+		var player = this.players[0+!!(action & 0x08)]; //so dirty TODO
 
 		if (type === 'keyup') {
 			player.controlEnd(0x01 & action);
@@ -204,20 +265,24 @@
 
 			switch (evt.keyCode) {
 				case 38: //UP
-					action = _KEY_P1_UP;
-					break;
-
-				case 40: //DOWN
-					action = _KEY_P1_DOWN;
-					break;
-
-				case 65: //A
 					action = _KEY_P2_UP;
 					break;
 
-				case 90: //Z
+				case 40: //DOWN
 					action = _KEY_P2_DOWN;
 					break;
+
+				case 65: //A
+					action = _KEY_P1_UP;
+					break;
+
+				case 90: //Z
+					action = _KEY_P1_DOWN;
+					break;
+
+				case 27: //escape
+					this.die();
+					throw new Error('game over');
 			}
 
 			if (action) {
