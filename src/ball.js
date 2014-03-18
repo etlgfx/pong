@@ -66,10 +66,20 @@ define(function(require) {
 				paddles[1].coords.x - paddles[1].bounds.w / 2, //left
 			];
 
-			if (paddleBox[0] - this.radius < this.coords.y && paddleBox[2] + this.radius > this.coords.y) {
-				if (newx > paddleBox[3] - this.radius) { //collison
+			if (paddleBox[0] < this.coords.y && paddleBox[2] > this.coords.y) {
+				if (newx > paddleBox[3] - this.radius) { //straight collison
 					this.coords.x = paddleBox[3] - this.radius - (newx - (paddleBox[3] - this.radius));
 					this.velocity.x = -this.velocity.x;
+				}
+			}
+			else if (newx > paddleBox[3] - this.radius) {
+				if (paddleBox[0] - this.radius < this.coords.y && paddleBox[0] > this.coords.y) { //corner collision
+					if (this.radius * this.radius > (newx - paddleBox[3]) * (newx - paddleBox[3]) + (newy - paddleBox[0]) * (newy - paddleBox[0])) {
+					}
+				}
+				else if (paddleBox[2] + this.radius > this.coords.y && paddleBox[2] < this.coords.y) { //corner collision
+					if (this.radius * this.radius > (newx - paddleBox[3]) * (newx - paddleBox[3]) + (newy - paddleBox[2]) * (newy - paddleBox[2])) {
+					}
 				}
 			}
 		}
