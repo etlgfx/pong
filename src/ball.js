@@ -30,52 +30,62 @@ define(function(require) {
 			this.radius //left
 		];
 
+		var dx = ts * this.velocity.x;
+		var dy = ts * this.velocity.y;
+
+		var newx = this.coords.x + dx;
+		var newy = this.coords.y + dy;
+
 		this.coords.x += ts * this.velocity.x;
 		this.coords.y += ts * this.velocity.y;
 
-		if (this.coords.x < box[3]) { //left
-			this.coords.x = box[3] - (this.coords.x - box[3]);
+		if (newx < box[3]) { //left
+			this.coords.x = box[3] - (newx - box[3]);
 			this.velocity.x = -this.velocity.x;
 		}
-		else if (this.coords.x > box[1]) { //right
-			this.coords.x = box[1] - (this.coords.x - box[1]);
+		else if (newx > box[1]) { //right
+			this.coords.x = box[1] - (newx - box[1]);
 			this.velocity.x = -this.velocity.x;
 		}
 
-		if (this.coords.y < box[0]) { //top
-			this.coords.y = box[0] - (this.coords.y - box[0]);
+		if (newy < box[0]) { //top
+			this.coords.y = box[0] - (newy - box[0]);
 			this.velocity.y = -this.velocity.y;
 		}
-		else if (this.coords.y > box[2]) { //bottom
-			this.coords.y = box[2] - (this.coords.y - box[2]);
+		else if (newy > box[2]) { //bottom
+			this.coords.y = box[2] - (newy - box[2]);
 			this.velocity.y = -this.velocity.y;
 		}
 
 		//collisions
 		if (this.velocity.x > 0) {
 			var paddleBox = [
-				paddles[1].coords[1] - paddles[1].bounds.y / 2, //top
-				paddles[1].coords[0] + paddles[1].bounds.w / 2, //right
-				paddles[1].coords[1] + paddles[1].bounds.y / 2, //bottom
-				paddles[1].coords[0] - paddles[1].bounds.w / 2, //left
+				paddles[1].coords.y - paddles[1].bounds.h / 2, //top
+				paddles[1].coords.x + paddles[1].bounds.w / 2, //right
+				paddles[1].coords.y + paddles[1].bounds.h / 2, //bottom
+				paddles[1].coords.x - paddles[1].bounds.w / 2, //left
 			];
 
-			if (paddleBox[3] - this.coords.x < 0) {
-				console.log('p2 point');
-				//point
+			if (paddleBox[0] - this.radius < this.coords.y && paddleBox[2] + this.radius > this.coords.y) {
+				if (newx > paddleBox[3] - this.radius) { //collison
+					this.coords.x = paddleBox[3] - this.radius - (newx - (paddleBox[3] - this.radius));
+					this.velocity.x = -this.velocity.x;
+				}
 			}
 		}
 		else {
 			var paddleBox = [
-				paddles[0].coords[1] - paddles[0].bounds.y / 2, //top
-				paddles[0].coords[0] + paddles[0].bounds.w / 2, //right
-				paddles[0].coords[1] + paddles[0].bounds.y / 2, //bottom
-				paddles[0].coords[0] - paddles[0].bounds.w / 2, //left
+				paddles[0].coords.y - paddles[0].bounds.h / 2, //top
+				paddles[0].coords.x + paddles[0].bounds.w / 2, //right
+				paddles[0].coords.y + paddles[0].bounds.h / 2, //bottom
+				paddles[0].coords.x - paddles[0].bounds.w / 2, //left
 			];
 
-			if (this.coords.x - paddleBox < 0) {
-				console.log('p1 point');
-				//point
+			if (paddleBox[0] - this.radius < this.coords.y && paddleBox[2] + this.radius > this.coords.y) {
+				if (newx < paddleBox[1] + this.radius) { //collison
+					this.coords.x = paddleBox[1] + this.radius - (newx - (paddleBox[1] + this.radius));
+					this.velocity.x = -this.velocity.x;
+				}
 			}
 		}
 	};

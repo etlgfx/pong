@@ -5,17 +5,15 @@ define(function(require) {
 	'use strict;';
 
 	function Obj(o) {
-		this.coords = {
-			x: o.coords[0],
-			y: o.coords[1]
-		};
-		this.velocity = {
-			x: o.velocity[0],
-			y: o.velocity[1]
-		};
+		this.coords = o.coords ?
+			{ x: o.coords[0], y: o.coords[1] } :
+			{ x: 0, y: 0 };
+		this.velocity = o.velocity ?
+			{ x: o.velocity[0], y: o.velocity[1] } :
+			{ x: 0, y: 0 };
 		this.force = [0, 0];
 		this.mass = 1;
-		this.bounds = o.bounds;
+		this.bounds = o.bounds || { w: 0, h: 0 };
 		this.animate = null;
 	}
 
