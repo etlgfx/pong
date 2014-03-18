@@ -1,0 +1,15 @@
+{
+  "name": "pong",
+  "description": "Pong",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+	"test": "mocha -R spec tests"
+  },
+  "dependencies": {
+	"amdefine": "*"
+  },
+  "devDependencies": {
+	  "mocha": "*"
+  }
+}
