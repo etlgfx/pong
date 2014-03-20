@@ -7,6 +7,7 @@ define(function(require) {
 	var Paddle = require('./paddle'),
 		Obj = require('./obj'),
 		Ball = require('./ball'),
+		Mediator = require('./mediator'),
 		Player = require('./player');
 
 	var _KEY_P1_UP   = 0x01, //bitmask 0x08 determines player #
@@ -146,6 +147,10 @@ define(function(require) {
 
 	Pong.prototype.keypress = function (evt) {
 	};
+
+Mediator.on('score', function (data) {
+	console.log(data);
+});
 
     return {
         init: function (id) {

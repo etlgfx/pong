@@ -4,7 +4,8 @@ define(function(require) {
 
 	'use strict;';
 
-	var Obj = require('./obj');
+	var Obj = require('./obj'),
+		Mediator = require('./mediator');
 
 	function Ball(o) {
 		o.bounds = {w: o.size, h: o.size};
@@ -42,10 +43,14 @@ define(function(require) {
 		if (newx < box[3]) { //left
 			this.coords.x = box[3] - (newx - box[3]);
 			this.velocity.x = -this.velocity.x;
+
+			Mediator.trigger('score', this);
 		}
 		else if (newx > box[1]) { //right
 			this.coords.x = box[1] - (newx - box[1]);
 			this.velocity.x = -this.velocity.x;
+
+			Mediator.trigger('score', this);
 		}
 
 		if (newy < box[0]) { //top
