@@ -84,7 +84,7 @@ define(function(require) {
 
 		this.paddles.forEach(function (p) {
 			p.physics(ts);
-			p.draw(this.ctx)
+			p.draw(this.ctx);
 		}, this);
 
 		this.ball.physics(ts, [this.width, this.height], this.paddles);
@@ -112,7 +112,7 @@ define(function(require) {
 	};
 
 	Pong.prototype.key = function (evt) {
-		if (evt.type === 'keyup' || evt.type === 'keydown' || evt.charCode == 0) {
+		if (evt.type === 'keyup' || evt.type === 'keydown' || evt.charCode === 0) {
 			var action;
 
 			switch (evt.keyCode) {
@@ -148,8 +148,8 @@ define(function(require) {
 	Pong.prototype.keypress = function (evt) {
 	};
 
-Mediator.on('score', function (data) {
-	console.log(data);
+Mediator.on('score', function (player, data) {
+	console.log('score', player, data);
 });
 
     return {

@@ -44,13 +44,13 @@ define(function(require) {
 			this.coords.x = box[3] - (newx - box[3]);
 			this.velocity.x = -this.velocity.x;
 
-			Mediator.trigger('score', this);
+			Mediator.trigger('score', 'left', this);
 		}
 		else if (newx > box[1]) { //right
 			this.coords.x = box[1] - (newx - box[1]);
 			this.velocity.x = -this.velocity.x;
 
-			Mediator.trigger('score', this);
+			Mediator.trigger('score', 'right', this);
 		}
 
 		if (newy < box[0]) { //top
@@ -62,9 +62,11 @@ define(function(require) {
 			this.velocity.y = -this.velocity.y;
 		}
 
+        var paddleBox;
+
 		//collisions
 		if (this.velocity.x > 0) {
-			var paddleBox = [
+			paddleBox = [
 				paddles[1].coords.y - paddles[1].bounds.h / 2, //top
 				paddles[1].coords.x + paddles[1].bounds.w / 2, //right
 				paddles[1].coords.y + paddles[1].bounds.h / 2, //bottom
@@ -89,7 +91,7 @@ define(function(require) {
 			}
 		}
 		else {
-			var paddleBox = [
+			paddleBox = [
 				paddles[0].coords.y - paddles[0].bounds.h / 2, //top
 				paddles[0].coords.x + paddles[0].bounds.w / 2, //right
 				paddles[0].coords.y + paddles[0].bounds.h / 2, //bottom
