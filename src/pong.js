@@ -73,6 +73,18 @@ define(function(require) {
 		];
 
 		this.ball = new Ball({coords: [this.width / 2, this.height / 2], velocity: [250, 250], size: 20});
+
+        Mediator.on('score', function (player, data) {
+            switch (player) {
+                case 'left':
+                    this.players[0].score();
+                    break;
+                case 'right':
+                    this.players[0].score();
+                    break;
+                default: throw new Error('what player: '+ player);
+            }
+        }, this);
 	}
 
     Pong.prototype.draw = function () {
@@ -147,10 +159,6 @@ define(function(require) {
 
 	Pong.prototype.keypress = function (evt) {
 	};
-
-Mediator.on('score', function (player, data) {
-	console.log('score', player, data);
-});
 
     return {
         init: function (id) {
