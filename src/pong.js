@@ -77,7 +77,7 @@ define(function(require) {
         Mediator.on('score', function (player, data) {
             switch (player) {
                 case 'left':
-                    this.players[0].score();
+                    this.players[1].score();
                     break;
                 case 'right':
                     this.players[0].score();
@@ -98,6 +98,10 @@ define(function(require) {
 			p.physics(ts);
 			p.draw(this.ctx);
 		}, this);
+
+        this.players.forEach(function (p, index) {
+            p.draw(this.ctx, [this.width * (index + 1) / 3, 50]);
+        }, this);
 
 		this.ball.physics(ts, [this.width, this.height], this.paddles);
 		this.ball.draw(this.ctx);
