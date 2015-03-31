@@ -49,8 +49,8 @@ define(function(require) {
         ],
         '3': [
             [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 1, 1, 1, 1, 1, 0],
-            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 1, 1, 0],
             [0, 0, 0, 1, 1, 1, 0, 0],
             [0, 0, 0, 0, 0, 1, 1, 0],
@@ -62,12 +62,12 @@ define(function(require) {
             [0, 0, 0, 0, 0, 0, 0, 0],
         ],
         '4': [
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 1, 0, 0, 0, 0],
-            [0, 1, 1, 0, 0, 1, 1, 0],
-            [0, 1, 1, 0, 0, 1, 1, 0],
+            [0, 1, 1, 0, 0, 0, 0, 0],
+            [0, 1, 1, 0, 0, 0, 0, 0],
+            [1, 1, 0, 0, 0, 1, 1, 0],
+            [1, 1, 0, 0, 0, 1, 1, 0],
+            [1, 1, 0, 0, 0, 1, 1, 0],
             [1, 1, 1, 1, 1, 1, 1, 1],
-            [0, 0, 0, 0, 0, 1, 1, 0],
             [0, 0, 0, 0, 0, 1, 1, 0],
             [0, 0, 0, 0, 0, 1, 1, 0],
             [0, 0, 0, 0, 0, 1, 1, 0],
@@ -77,8 +77,8 @@ define(function(require) {
         ],
         '5': [
             [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 1, 1, 1, 1, 1, 0],
-            [0, 1, 1, 1, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 1, 1, 0, 0],
             [1, 1, 0, 0, 0, 0, 0, 0],
             [1, 1, 1, 1, 1, 1, 1, 0],
             [0, 0, 0, 0, 0, 0, 1, 1],
@@ -140,7 +140,7 @@ define(function(require) {
             [0, 0, 0, 0, 0, 0, 1, 1],
             [0, 0, 0, 0, 0, 1, 1, 0],
             [0, 0, 0, 1, 1, 1, 0, 0],
-            [0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
@@ -169,23 +169,25 @@ define(function(require) {
     var CanvasFont = function (ctx, options) {
         this.canvas = ctx;
         this._options = {
+            pixel: 0.9,
             scale: 3,
-            aspect: 1.5,
+            aspect: 1.3,
             charSpace: 1,
             lineSpace: 1,
             lineHeight: 11,
             baseline: 8,
             charWidth: 8,
+            justify: 'left',
         };
     };
 
     CanvasFont.prototype = {
         draw: function (coords, str, options) {
-            var offset = [0, 0];
-
             if (typeof str !== 'string') {
                 str = str.toString();
             }
+
+            var offset = [0, 0];
 
             for (var i = 0; i < str.length; i++) {
                 if (str.charAt(i) === '\n') {
@@ -203,7 +205,12 @@ define(function(require) {
 
                         var pixelOffset = [c, r];
 
-                        this.canvas.fillRect(coords[0] + (offset[0] + pixelOffset[0]) * this._options.scale, coords[1] + (offset[1] + pixelOffset[1]) * this._options.scale * this._options.aspect, this._options.scale, this._options.scale * this._options.aspect);
+                        this.canvas.fillRect(
+                            coords[0] + (offset[0] + pixelOffset[0]) * this._options.scale,
+                            coords[1] + (offset[1] + pixelOffset[1]) * this._options.scale * this._options.aspect,
+                            this._options.scale * this._options.pixel,
+                            this._options.scale * this._options.aspect * this._options.pixel
+                        );
 
                     }, this);
                 }, this);
