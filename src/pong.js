@@ -8,7 +8,8 @@ define(function(require) {
 		Obj = require('./obj'),
 		Ball = require('./ball'),
 		Mediator = require('./mediator'),
-		Player = require('./player');
+		Player = require('./player'),
+        Font = require('./font');
 
 	var _KEY_P1_UP   = 0x01, //bitmask 0x08 determines player #
 	    _KEY_P1_DOWN = 0x02,
@@ -58,6 +59,14 @@ define(function(require) {
 		this.width = this.ctx.canvas.width;
 		this.height = this.ctx.canvas.height;
 		this.lastDraw = Date.now();
+        this.font = new Font(this.ctx, {
+            pixel: 0.9,
+            scale: 2,
+            aspect: 1,
+            justify: 'center'
+        });
+
+        this.ui = null;
 
 		//TODO instead of this we could use a gamestate / scene graph thingy and
 		//call draw on that, and refresh the entire state every time a point is
@@ -84,6 +93,42 @@ define(function(require) {
                     break;
                 default: throw new Error('what player: '+ player);
             }
+
+            this.ball.stopNow();
+
+            this.ui = function () {
+                this.font.draw([this.width / 2, this.height / 2 - 100], 'score');
+            };
+
+            setTimeout(function () {
+                this.ball = new Ball({coords: [this.width / 2, this.height / 2], velocity: [0, 0], size: 20});
+
+                this.ui = function () {
+                    this.font.draw([this.width / 2, this.height / 2 - 100], '3');
+                };
+            }.bind(this), 1000);
+
+            setTimeout(function () {
+                this.ui = function () {
+                    this.font.draw([this.width / 2, this.height / 2 - 100], '2');
+                };
+            }.bind(this), 2000);
+
+            setTimeout(function () {
+                this.ui = function () {
+                    this.font.draw([this.width / 2, this.height / 2 - 100], '1');
+                };
+            }.bind(this), 3000);
+
+            setTimeout(function () {
+                this.ui = null;
+                this.ball.velocity = {
+                    x: (Math.random() - 0.5 > 0 ? 1 : -1) * (Math.random() * 100 + 200),
+                    y: (Math.random() - 0.5 > 0 ? 1 : -1) * (Math.random() * 100 + 200)
+                };
+
+            }.bind(this), 4000);
+
         }, this);
 	}
 
@@ -105,6 +150,10 @@ define(function(require) {
 
 		this.ball.physics(ts, [this.width, this.height], this.paddles);
 		this.ball.draw(this.ctx);
+
+        if (this.ui) {
+            this.ui();
+        }
 
 		this.animationFrame = window.requestAnimationFrame(this.draw.bind(this));
     };

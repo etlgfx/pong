@@ -4,6 +4,8 @@ define(function(require) {
 
 	'use strict;';
 
+    var util = require('util');
+
     var font = {
         '0': [
             [0, 0, 0, 0, 0, 0, 0, 0],
@@ -164,11 +166,14 @@ define(function(require) {
     this.cache = {};
 
     /**
+     * @class @constructor CanvasFont
+     *
      * ghetto bitmap font for canvas
      */
     var CanvasFont = function (ctx, options) {
         this.canvas = ctx;
-        this._options = {
+        debugger;
+        this._options = util.mixin({
             pixel: 0.9,
             scale: 3,
             aspect: 1.3,
@@ -178,7 +183,7 @@ define(function(require) {
             baseline: 8,
             charWidth: 8,
             justify: 'left',
-        };
+        }, options);
     };
 
     CanvasFont.prototype = {
@@ -196,6 +201,10 @@ define(function(require) {
                 }
 
                 var glyph = font[str.charAt(i)];
+
+                if (glyph === undefined) {
+                    continue;
+                }
 
                 glyph.forEach(function (line, r) {
                     line.forEach(function (pixel, c) {
