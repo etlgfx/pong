@@ -98,7 +98,7 @@ define(function(require) {
 
             this.ui = function () {
                 //debugger;
-                this.font.draw([this.width / 2, this.height / 2 - 100], 'score\nsr\n1234457899');
+                this.font.draw([this.width / 2, this.height / 2 - 100], 'score');
             };
 
             setTimeout(function () {
