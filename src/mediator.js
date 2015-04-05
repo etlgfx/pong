@@ -4,8 +4,8 @@ define(function(require) {
 
 	'use strict;';
 
-    var Events = require('events'),
-        util = require('util');
+    var Events = require('./events'),
+        util = require('./util');
 
     /**
      * Just a singleton Event bus
