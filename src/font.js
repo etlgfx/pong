@@ -4,7 +4,7 @@ define(function(require) {
 
 	'use strict;';
 
-    var util = require('util');
+    var util = require('./util');
 
     var font = {
         '0': [
