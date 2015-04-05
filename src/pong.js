@@ -60,10 +60,10 @@ define(function(require) {
 		this.height = this.ctx.canvas.height;
 		this.lastDraw = Date.now();
         this.font = new Font(this.ctx, {
-            pixel: 0.9,
+            pixel: 0.5,
             scale: 2,
             aspect: 1,
-            justify: 'center'
+            align: 'center'
         });
 
         this.ui = null;
@@ -97,7 +97,8 @@ define(function(require) {
             this.ball.stopNow();
 
             this.ui = function () {
-                this.font.draw([this.width / 2, this.height / 2 - 100], 'score');
+                //debugger;
+                this.font.draw([this.width / 2, this.height / 2 - 100], 'score\nsr\n1234457899');
             };
 
             setTimeout(function () {

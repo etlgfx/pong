@@ -39,7 +39,9 @@ define(function(require) {
     };
 
     Player.prototype.draw = function (ctx, coords) {
-        var font = new Font(ctx);
+        var font = new Font(ctx, {
+            align: 'center'
+        });
         font.draw(coords, this.getScore());
     };
 

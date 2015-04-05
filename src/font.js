@@ -147,6 +147,76 @@ define(function(require) {
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
         ],
+        'c': [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        'e': [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 0, 0],
+            [1, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        'o': [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        'r': [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 0],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 0],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [1, 1, 0, 0, 0, 0, 1, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        's': [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1, 1, 1, 0],
+            [1, 1, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 0, 0, 0, 1, 1],
+            [0, 0, 0, 0, 0, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
         ' ': [
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
@@ -172,9 +242,9 @@ define(function(require) {
      */
     var CanvasFont = function (ctx, options) {
         this.canvas = ctx;
-        debugger;
+        //debugger;
         this._options = util.mixin({
-            pixel: 0.9,
+            pixel: 0.8,
             scale: 3,
             aspect: 1.3,
             charSpace: 1,
@@ -182,7 +252,7 @@ define(function(require) {
             lineHeight: 11,
             baseline: 8,
             charWidth: 8,
-            justify: 'left',
+            align: 'left',
         }, options);
     };
 
@@ -192,39 +262,52 @@ define(function(require) {
                 str = str.toString();
             }
 
+            var lines = str.split('\n');
             var offset = [0, 0];
+            var line;
 
-            for (var i = 0; i < str.length; i++) {
-                if (str.charAt(i) === '\n') {
-                    offset[1] += this._options.lineSpace + this._options.lineHeight;
-                    offset[0] = 0;
+            while (line = lines.shift()) {
+
+                switch (this._options.align) {
+                    case 'right':
+                        offset[0] = - (this._options.charWidth + this._options.charSpace) * line.length;
+                        break;
+
+                    case 'center':
+                        offset[0] = - (this._options.charWidth + this._options.charSpace) * line.length / 2;
+                        break;
                 }
 
-                var glyph = font[str.charAt(i)];
+                for (var i = 0; i < line.length; i++) {
+                    var glyph = font[line.charAt(i)];
 
-                if (glyph === undefined) {
-                    continue;
-                }
+                    if (glyph === undefined) {
+                        continue;
+                    }
 
-                glyph.forEach(function (line, r) {
-                    line.forEach(function (pixel, c) {
-                        if (!pixel) {
-                            return;
-                        }
+                    glyph.forEach(function (line, r) {
+                        line.forEach(function (pixel, c) {
+                            if (!pixel) {
+                                return;
+                            }
 
-                        var pixelOffset = [c, r];
+                            var pixelOffset = [c, r];
 
-                        this.canvas.fillRect(
-                            coords[0] + (offset[0] + pixelOffset[0]) * this._options.scale,
-                            coords[1] + (offset[1] + pixelOffset[1]) * this._options.scale * this._options.aspect,
-                            this._options.scale * this._options.pixel,
-                            this._options.scale * this._options.aspect * this._options.pixel
-                        );
+                            this.canvas.fillRect(
+                                    coords[0] + (offset[0] + pixelOffset[0]) * this._options.scale,
+                                    coords[1] + (offset[1] + pixelOffset[1]) * this._options.scale * this._options.aspect,
+                                    this._options.scale * this._options.pixel,
+                                    this._options.scale * this._options.aspect * this._options.pixel
+                                    );
 
+                        }, this);
                     }, this);
-                }, this);
 
-                offset[0] += this._options.charSpace + this._options.charWidth;
+                    offset[0] += this._options.charSpace + this._options.charWidth;
+                }
+
+                offset[1] += this._options.lineSpace + this._options.lineHeight;
+                offset[0] = 0;
             }
         }
     };
