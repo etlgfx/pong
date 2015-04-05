@@ -72,8 +72,22 @@ define(function(require) {
 		//call draw on that, and refresh the entire state every time a point is
 		//scored and whatnot
 		this.paddles = [
-			new Paddle({coords: [20, this.height / 2], velocity: [0, 0], bounds: {w: 20, h: 100}}),
-			new Paddle({coords: [this.width - 20, this.height / 2], velocity: [0, 0], bounds: {w: 20, h: 100}}),
+			new Paddle({
+                coords: [20, this.height / 2],
+                velocity: [0, 0],
+                bounds: {w: 20, h: 100}
+            }, {
+                w: this.width,
+                h: this.height
+            }),
+			new Paddle({
+                coords: [this.width - 20, this.height / 2],
+                velocity: [0, 0],
+                bounds: {w: 20, h: 100}
+            }, {
+                w: this.width,
+                h: this.height
+            }),
 		];
 
 		this.players = [
