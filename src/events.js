@@ -1,13 +1,13 @@
 if (typeof define !== 'function') { var define = require('amdefine')(module); }
 
-define(function(require) {
+define((require) => {
     'use strict;';
 
     var Events = {
         /**
          * TODO add multiple event processing
          */
-        on: function (evt, callback, context) {
+        on: (evt, callback, context) => {
             if (this._events === undefined) {
                 this._events = {evt: []};
             }
@@ -17,7 +17,7 @@ define(function(require) {
             }
 
             //backbone doesn't do this, drop it?
-            for (var i = 0; i < this._events[evt].length; i++) {
+            for (var i of this._events[evt]) {
                 if (this._events[evt][i] === callback) {
                     return;
                 }
@@ -29,7 +29,7 @@ define(function(require) {
             });
         },
 
-        off: function (evt, callback) {
+        off: (evt, callback) => {
             if (!this._events || !this._events[evt]) {
                 return;
             }
@@ -39,7 +39,7 @@ define(function(require) {
                 return;
             }
 
-            for (var i = 0; i < this._events[evt].length; i++) {
+            for (var i of this._events[evt]) {
                 if (this._events[evt][i] === callback) {
                     this._events[evt].splice(i, 1);
                     break;
@@ -47,21 +47,16 @@ define(function(require) {
             }
         },
 
-        removeAll: function () {
+        removeAll: () => {
             this._events = {};
         },
 
-        trigger: function (evt) {
+        trigger: (evt, ...args) => {
             if (!this._events || !this._events[evt]) {
                 return;
             }
 
-            var args = [];
-            for (var i = 1; i < arguments.length; i++) {
-                args.push(arguments[i]);
-            }
-
-            this._events[evt].forEach(function (listener) {
+            this._events[evt].forEach((listener) => {
                 listener.callback.apply(listener.context, args);
             });
         }
