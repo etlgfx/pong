@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <style>
+body {
+    background: #000;
+    color: #0f0;
+    font-family: fixed;
+}
+canvas {
+    display: block;
+}
+        </style>
+	</head>
+	<body>
+        <canvas id="game" width="160" height="100">
+        </canvas>
+        <canvas id="monitor" width="1280" height="800">
+        </canvas>
+
+		<script type="text/javascript">
+
+var game = document.getElementById('game');
+var monitor = document.getElementById('monitor');
+
+var gameCanvas = game.getContext('2d');
+var monitorCanvas = monitor.getContext('2d');
+
+gameCanvas.fillStyle = "rgb(0, 30, 0)";
+monitorCanvas.fillStyle = "rgb(0, 30, 0)";
+gameCanvas.fillRect(0, 0, game.width, game.height);
+monitorCanvas.fillRect(0, 0, monitor.width, monitor.height);
+
+gameCanvas.fillStyle = "rgb(0, 255, 0)";
+for (var i = 0; i < game.width; i++) {
+    for (var j = 0; j < game.height; j++) {
+        if (Math.random() > 0.5) {
+            gameCanvas.fillRect(i, j, 1, 1);
+        }
+    }
+}
+
+function makeCRT(ctxIn, ctxOut) {
+    var pixels = ctxIn.getImageData(0, 0, ctxIn.canvas.width, ctxIn.canvas.height);
+    //var outPixels = ctxOut.createImageData(ctxOut.canvas.width, ctxOut.canvas.height);
+
+    var factor = ctxOut.canvas.width / ctxIn.canvas.width;
+
+    ctxOut.fillStyle = 'rgb(0, 255, 0)';
+
+    var w = ctxIn.canvas.width,
+        h = ctxIn.canvas.height;
+
+    for (var i = 0; i < pixels.data.length; i += 4) {
+        if (pixels.data[i + 1] == 255) {
+            var x = (i / 4 % w),
+                y = Math.floor(i / 4 / w);
+
+            x = (x - w / 2) / (w / 2);
+            y = (y - h / 2) / (h / 2);
+
+            var tx = x > 0 ? x - 0.05 * y * y * Math.abs(x): x + 0.05 * y * y * Math.abs(x);
+            var ty = y > 0 ? y - 0.05 * x * x * Math.abs(y): y + 0.05 * x * x * Math.abs(y);
+
+            ctxOut.fillRect(0.1 * factor + (tx + 1) * 0.5 * w * factor, 0.1 * factor + (ty + 1) * 0.5 * h * factor, 0.8 * factor, 0.8 * factor);
+
+            /*
+            var v = [(tx + 1) * 0.5 * w * factor, (ty + 1) * 0.5 * h * factor];
+            var vn = normalize(v);
+            var vo = [-vn[1], -vn[0]];
+
+            var p = new Path2D();
+            p.moveTo(v[0], v[1]);
+            p.lineTo(factor * vo[0] + v[0], factor * vo[1] + v[1]);
+            p.lineTo(0.9 * v[0], 0.9 * v[1]);
+            p.lineTo(-factor * vo[0] + v[0], -factor * vo[1] + v[1]);
+            p.lineTo(v[0], v[1]);
+            ctxOut.fill(p);
+            //outPixels[i * factor + 1] = 255;
+            */
+        }
+    }
+}
+
+function normalize(v) {
+    var l = Math.sqrt(v[0] * v[0] + v[1] + v[1]);
+    return [v[0] / l, v[1] / l];
+}
+
+makeCRT(gameCanvas, monitorCanvas);
+
+		</script>
+	</body>
+</html>
